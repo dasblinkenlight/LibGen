@@ -1,0 +1,13 @@
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+.idea
+LibGen/build
+LibGen/node_modules
+LibGen/.DS_Store
+LibGen.sln.DotSettings.user
+.DS_Store
+LibGen/package-lock.json
+Test-Sample

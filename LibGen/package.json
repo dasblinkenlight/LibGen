@@ -1,0 +1,10 @@
+{
+    "version": "1.0.0",
+    "name": "LibGen",
+    "private": true,
+    "devDependencies": {
+        "grunt": "~1.6.1",
+        "grunt-contrib-jshint": "~3.2.0",
+        "grunt-contrib-uglify": "~5.2.2"
+    }
+}

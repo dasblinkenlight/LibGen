@@ -1,0 +1,90 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <Description>Generator of partial views for client-side libraries.</Description>
+        <Version>1.0.9</Version>
+        <FileVersion>1.0.9</FileVersion>
+        <Title>LibGen</Title>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <Authors>Sergey Kalinichenko</Authors>
+        <PackageId>Dasblinkenlight.LibGen</PackageId>
+        <PackageTags>clien-side-lib libgen</PackageTags>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageProjectUrl></PackageProjectUrl>
+
+
+
+
+        <LangVersion>latestmajor</LangVersion>
+        <Nullable>enable</Nullable>
+        <IsPackable>true</IsPackable>
+        <Copyright>Copyright ©dasblinkwnlight 2022</Copyright>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <TargetsForTfmSpecificBuildOutput>
+            $(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage
+        </TargetsForTfmSpecificBuildOutput>
+        <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
+        <NoWarn>NU5100</NoWarn>
+        <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+        <GenerateDependencyFile>true</GenerateDependencyFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="compiler\resources\**\*" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference
+            Include="Microsoft.Build.Utilities.Core"
+            Version="17.11.4"
+            PrivateAssets="all"
+            ExcludeAssets="Runtime"/>
+        <PackageReference
+            Include="HtmlTextWriter"
+            Version="3.0.1"
+            PrivateAssets="all"/>
+        <PackageReference
+            Include="Microsoft.Build.Framework"
+            Version="17.11.4"
+            PrivateAssets="all" />
+        <PackageReference
+            Include="Microsoft.CSharp"
+            Version="4.7.0"
+            PrivateAssets="all"/>
+        <PackageReference
+            Include="System.Text.Json"
+            Version="8.0.5"
+            PrivateAssets="all"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- these lines pack the build props/targets files to the `build` folder in the generated package.
+            by convention, the .NET SDK will look for build\<Package Id>.props and build\<Package Id>.targets
+            for automatic inclusion in the build. -->
+        <Content Include="build\LibGen.props" PackagePath="build\" />
+        <Content Include="build\LibGen.targets" PackagePath="build\" />
+    </ItemGroup>
+
+    <!-- This is the target we defined above. It's purpose is to add all of our PackageReference
+         and ProjectReference's runtime assets to our package output.  -->
+    <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
+        <ItemGroup>
+            <!-- The TargetPath is the path inside the package that the source file will be placed.
+            This is already precomputed in the ReferenceCopyLocalPaths items' DestinationSubPath,
+            so reuse it here. -->
+            <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths)"
+                TargetPath="%(ReferenceCopyLocalPaths.DestinationSubPath)" />
+        </ItemGroup>
+    </Target>
+    <!-- This target adds the generated deps.json file to our package output -->
+    <Target
+        Name="AddBuildDependencyFileToBuiltProjectOutputGroupOutput"
+        BeforeTargets="BuiltProjectOutputGroup"
+        Condition=" '$(GenerateDependencyFile)' == 'true'">
+        <ItemGroup>
+            <BuiltProjectOutputGroupOutput
+                Include="$(ProjectDepsFilePath)"
+                TargetPath="$(ProjectDepsFileName)"
+                FinalOutputPath="$(ProjectDepsFilePath)" />
+        </ItemGroup>
+    </Target>
+</Project>

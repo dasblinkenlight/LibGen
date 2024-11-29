@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibGen", "LibGen\LibGen.csproj", "{FC248C18-86D8-4CC3-A676-9E47D9166F82}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test-LibGen", "Test-LibGen\Test-LibGen.csproj", "{5B8E2EF3-5351-4F4F-B5E3-9F402DA0363F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test-Sample", "Test-Sample\Test-Sample.csproj", "{BB476911-639D-43A5-8430-C5B66B4B0D24}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FC248C18-86D8-4CC3-A676-9E47D9166F82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC248C18-86D8-4CC3-A676-9E47D9166F82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC248C18-86D8-4CC3-A676-9E47D9166F82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC248C18-86D8-4CC3-A676-9E47D9166F82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B8E2EF3-5351-4F4F-B5E3-9F402DA0363F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B8E2EF3-5351-4F4F-B5E3-9F402DA0363F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B8E2EF3-5351-4F4F-B5E3-9F402DA0363F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B8E2EF3-5351-4F4F-B5E3-9F402DA0363F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB476911-639D-43A5-8430-C5B66B4B0D24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB476911-639D-43A5-8430-C5B66B4B0D24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB476911-639D-43A5-8430-C5B66B4B0D24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB476911-639D-43A5-8430-C5B66B4B0D24}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -11,11 +11,8 @@
         <PackageTags>clien-side-lib libgen</PackageTags>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageProjectUrl></PackageProjectUrl>
-
-
-
-
+        <PackageProjectUrl>https://github.com/dasblinkenlight/LibGen</PackageProjectUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <LangVersion>latestmajor</LangVersion>
         <Nullable>enable</Nullable>
         <IsPackable>true</IsPackable>
@@ -31,6 +28,12 @@
     </PropertyGroup>
     <ItemGroup>
         <EmbeddedResource Include="compiler\resources\**\*" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="README.md">
+            <Pack>true</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
     </ItemGroup>
     <ItemGroup>
         <PackageReference

@@ -1,0 +1,53 @@
+{
+  "version": "1.0",
+  "libraries": [
+    {
+      "library": "bootstrap",
+      "version": "5.3.3",
+      "provider": "cdnjs",
+      "files": [
+        {
+          "file": "js/bootstrap.bundle.min.js",
+          "component":"_BootstrapCSS",
+          "test-class":"window.bootstrap"
+        },
+        {
+          "file": "css/bootstrap.min.css",
+          "component":"_BootstrapJS",
+          "test-class":"visually-hidden",
+          "test-property":"position",
+          "test-value":"absolute"
+        }
+      ]
+    },
+    {
+      "library": "bootstrap-icons",
+      "version": "1.11.3",
+      "provider": "cdnjs",
+      "files": [
+        {
+          "file": "font/bootstrap-icons.min.css",
+          "component":"_BootstrapIcons",
+          "test-class":"bi",
+          "test-property":"font-family",
+          "test-element":":before",
+          "test-value":"bootstrap-icons"
+        },
+        "font/fonts/bootstrap-icons.woff",
+        "font/fonts/bootstrap-icons.woff2"
+      ]
+    },
+    {
+      "library": "imagesloaded",
+      "version": "5.0.0",
+      "provider": "jsdelivr",
+      "files": [
+        {
+          "file": "imagesloaded.pkgd.min.js",
+          "component":"_ImagesLoaded",
+          "test-class": "imagesLoaded"
+        }
+      ]
+    }
+  ]
+}

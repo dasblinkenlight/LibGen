@@ -1,0 +1,8 @@
+﻿<Solution>
+  <Folder Name="Solution Items">
+    <File Path="README.md"/>
+  </Folder>
+  <Project Path="LibGen\LibGen.csproj" Type="Classic C#" />
+  <Project Path="Test-LibGen\Test-LibGen.csproj" Type="Classic C#" />
+  <Project Path="Test-Sample\Test-Sample.csproj" Type="Classic C#" />
+</Solution>

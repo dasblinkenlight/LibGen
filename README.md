@@ -103,9 +103,12 @@ maps to one or more partial Razor views containing a single script link, which i
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <RootNamespace>My.Project.Namespace</RootNamespace>
-        <LibraryDefinitionsFile>LibDef.json</LibraryDefinitionsFile>
-        <LibraryResultFile>$(BaseIntermediateOutputPath)\$(LibraryDefinitionsFile).result</LibraryResultFile>
+        <!-- This setting lets you specify an override for the default LibDef.json name -->
+        <LibraryDefinitionsFile>ClientLibraries.json</LibraryDefinitionsFile>
     </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Dasblinkenlight.LibGen" Version="1.1.0" />
+    </ItemGroup>
 </Project>
 ```
 </details>

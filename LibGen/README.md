@@ -100,31 +100,12 @@ maps to one or more partial Razor views containing a single script link, which i
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk.Web">
-    <UsingTask TaskName="LibLinkGenerator" AssemblyFile="..\LibGen\bin\Debug\netstandard2.0\LibGen.dll"/>
-
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <RootNamespace>My.Project.Namespace</RootNamespace>
         <LibraryDefinitionsFile>LibDef.json</LibraryDefinitionsFile>
         <LibraryResultFile>$(BaseIntermediateOutputPath)\$(LibraryDefinitionsFile).result</LibraryResultFile>
     </PropertyGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\LibGen\LibGen.csproj" />
-    </ItemGroup>
-    <Target
-        Name="GenerateClientLibs" BeforeTargets="CoreCompile"
-        Inputs="$(MSBuildProjectDirectory)\$(LibraryDefinitionsFile)"
-        Outputs="$(LibraryResultFile)" >
-        <LibLinkGenerator
-            RootFolder="$(MSBuildProjectDirectory)"
-            FallbackRoot="wwwroot/assets/vendor"
-            LibraryDefinitions="$(LibraryDefinitionsFile)"
-            LibraryResultFile="$(LibraryResultFile)"/>
-    </Target>
-    <Target Name="ForceReGenerateOnRebuild" AfterTargets="CoreClean">
-        <Delete Files="$(LibraryResultFile)" />
-    </Target>
 </Project>
 ```
 </details>

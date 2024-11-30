@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!--A target that generates code, which is executed before the compilation-->
+    <Target Name="BeforeCompile"
+        Inputs="$(MSBuildProjectDirectory)\$(LibraryDefinitions)"
+        Outputs="$(BaseIntermediateOutputPath)\$(LibraryDefinitions).result">
+        <!--Calling our custom task-->
+        <LibLinkGenerator
+            RootFolder="$(MSBuildProjectDirectory)"
+            FallbackRoot="$(FallbackRoot)"
+            LibraryDefinitions="$(LibraryDefinitions)"
+            LibraryResultFile="$(BaseIntermediateOutputPath)\$(LibraryDefinitions).result">
+        </LibLinkGenerator>
+    </Target>
+    <!--The generated file is deleted after a general clean. It will force the regeneration on rebuild-->
+    <Target Name="AfterClean">
+        <Delete Files="$(BaseIntermediateOutputPath)\$(LibraryDefinitions).result" />
+    </Target>
+</Project>

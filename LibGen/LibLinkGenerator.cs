@@ -13,7 +13,7 @@ using Task = Microsoft.Build.Utilities.Task;
 
 [assembly: InternalsVisibleTo("Test-LibGen")]
 
-namespace LibGen;
+namespace Dasblinkenlight.LibGen;
 
 public class LibLinkGenerator : Task {
 

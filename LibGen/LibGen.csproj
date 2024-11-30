@@ -2,8 +2,8 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <Description>Generator of partial views for client-side libraries.</Description>
-        <Version>1.0.9</Version>
-        <FileVersion>1.0.9</FileVersion>
+        <Version>1.1.0</Version>
+        <FileVersion>1.1.0</FileVersion>
         <Title>LibGen</Title>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <Authors>Sergey Kalinichenko</Authors>
@@ -18,6 +18,7 @@
         <IsPackable>true</IsPackable>
         <Copyright>Copyright ©dasblinkwnlight 2022</Copyright>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <RootNamespace>Dasblinkenlight.LibGen</RootNamespace>
         <TargetsForTfmSpecificBuildOutput>
             $(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage
         </TargetsForTfmSpecificBuildOutput>
@@ -25,6 +26,7 @@
         <NoWarn>NU5100</NoWarn>
         <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
         <GenerateDependencyFile>true</GenerateDependencyFile>
+        <AssemblyName>Dasblinkenlight.LibGen</AssemblyName>
     </PropertyGroup>
     <ItemGroup>
         <EmbeddedResource Include="compiler\resources\**\*" />
@@ -63,8 +65,8 @@
         <!-- these lines pack the build props/targets files to the `build` folder in the generated package.
             by convention, the .NET SDK will look for build\<Package Id>.props and build\<Package Id>.targets
             for automatic inclusion in the build. -->
-        <Content Include="build\LibGen.props" PackagePath="build\" />
-        <Content Include="build\LibGen.targets" PackagePath="build\" />
+        <Content Include="build\Dasblinkenlight.LibGen.props" PackagePath="build\" />
+        <Content Include="build\Dasblinkenlight.LibGen.targets" PackagePath="build\" />
     </ItemGroup>
 
     <!-- This is the target we defined above. It's purpose is to add all of our PackageReference

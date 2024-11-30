@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LibGen;
+namespace Dasblinkenlight.LibGen;
 
 internal class LibLinkConfig {
 

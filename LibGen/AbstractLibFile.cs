@@ -1,6 +1,6 @@
 using System;
 
-namespace LibGen;
+namespace Dasblinkenlight.LibGen;
 
 internal abstract class AbstractLibFile {
 

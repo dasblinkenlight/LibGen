@@ -1,4 +1,4 @@
-namespace LibGen;
+namespace Dasblinkenlight.LibGen;
 
 internal class StyleRawLibFile : StyleLibFile {
 

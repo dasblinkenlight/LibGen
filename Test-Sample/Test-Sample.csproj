@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-    <UsingTask TaskName="LibLinkGenerator" AssemblyFile="..\LibGen\bin\Debug\netstandard2.0\LibGen.dll"/>
+    <UsingTask TaskName="LibLinkGenerator" AssemblyFile="..\LibGen\bin\Debug\netstandard2.0\Dasblinkenlight.LibGen.dll"/>
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>

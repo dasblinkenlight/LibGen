@@ -2,8 +2,8 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <Description>Generator of partial views for client-side libraries.</Description>
-        <Version>1.1.0</Version>
-        <FileVersion>1.1.0</FileVersion>
+        <Version>1.1.1</Version>
+        <FileVersion>1.1.1</FileVersion>
         <Title>LibGen</Title>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <Authors>Sergey Kalinichenko</Authors>

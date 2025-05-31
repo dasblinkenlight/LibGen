@@ -3,16 +3,16 @@
   "libraries": [
     {
       "library": "bootstrap",
-      "version": "5.3.3",
-      "provider": "cdnjs",
+      "version": "5.3.6",
+      "provider": "jsdelivr",
       "files": [
         {
-          "file": "js/bootstrap.bundle.min.js",
+          "file": "dist/js/bootstrap.bundle.min.js",
           "component":"_BootstrapCSS",
           "test-class":"window.bootstrap"
         },
         {
-          "file": "css/bootstrap.min.css",
+          "file": "dist/css/bootstrap.min.css",
           "component":"_BootstrapJS",
           "test-class":"visually-hidden",
           "test-property":"position",
@@ -22,8 +22,8 @@
     },
     {
       "library": "bootstrap-icons",
-      "version": "1.11.3",
-      "provider": "cdnjs",
+      "version": "1.13.1",
+      "provider": "jsdelivr",
       "files": [
         {
           "file": "font/bootstrap-icons.min.css",

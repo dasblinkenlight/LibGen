@@ -10,3 +10,4 @@ LibGen.sln.DotSettings.user
 .DS_Store
 LibGen/package-lock.json
 Test-Sample/Pages
+*.nupkg

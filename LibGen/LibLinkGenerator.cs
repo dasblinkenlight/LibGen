@@ -64,7 +64,7 @@ public class LibLinkGenerator : Task {
             return false;
         }
         if (!Directory.Exists(RootFolder)) {
-            Log.LogError("{RootPath} does not exist", RootFolder);
+            Log.LogError("{0:RootPath} does not exist", RootFolder);
             return false;
         }
         if (string.IsNullOrWhiteSpace(LibraryDefinitions)) {
@@ -72,7 +72,7 @@ public class LibLinkGenerator : Task {
             return false;
         }
         if (!File.Exists(LibDefFile)) {
-            Log.LogError($"{LibDefFile} does not exist", LibDefFile);
+            Log.LogError("{0:LibDefFile} does not exist", LibDefFile);
             return false;
         }
         if (string.IsNullOrWhiteSpace(FallbackRoot)) {
@@ -99,7 +99,7 @@ public class LibLinkGenerator : Task {
             foreach (var lib in config.Libraries) {
                 var result = TryProcessLibraryAsync(lib).GetAwaiter().GetResult();
                 if (!result) {
-                    Log.LogError("Unable to process {LibName}", lib.Name);
+                    Log.LogError("Unable to process {0:LibName}", lib.Name);
                 }
             }
             if (Log.HasLoggedErrors) {
@@ -136,13 +136,16 @@ public class LibLinkGenerator : Task {
                 pathToFile = libBasePath;
                 fileName = file.Name;
             }
-            using var stream = File.OpenWrite(Path.Combine(pathToFile, fileName));
+            var destinationPath = Path.Combine(pathToFile, fileName);
+            using var stream = File.OpenWrite(destinationPath);
             if (!await TryCopyContentToStream(file, stream)) {
+                Log.LogError("Unable to copy library content to {0:DestinationPath}", destinationPath);
                 return false;
             }
             stream.Close();
             var shaRes = TryGetIntegrityHash(pathToFile, fileName, out var sha512);
             if (!shaRes) {
+                Log.LogError("Unable to make integrity hash for {0:DestinationPath}", destinationPath);
                 return false;
             }
             if (file is not AbstractComponentFile component) {
@@ -179,6 +182,7 @@ public class LibLinkGenerator : Task {
         using var httpClient = new HttpClient();
         using var responseMsg = await httpClient.GetAsync(new Uri(file.RemoteUrl), cancellationToken);
         if (!responseMsg.IsSuccessStatusCode) {
+            Log.LogError("Unable to get '{0:RemoteUrl}': {1:Response}", file.RemoteUrl, responseMsg.ReasonPhrase);
             return false;
         }
         await responseMsg.Content.CopyToAsync(outputStream);

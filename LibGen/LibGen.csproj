@@ -2,8 +2,8 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <Description>Generator of partial views for client-side libraries.</Description>
-        <Version>1.1.2</Version>
-        <FileVersion>1.1.2</FileVersion>
+        <Version>1.1.3</Version>
+        <FileVersion>1.1.3</FileVersion>
         <Title>LibGen</Title>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <Authors>Sergey Kalinichenko</Authors>
@@ -38,27 +38,16 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference
-            Include="Microsoft.Build.Utilities.Core"
-            Version="17.11.4"
-            PrivateAssets="all"
-            ExcludeAssets="Runtime"/>
-        <PackageReference
-            Include="HtmlTextWriter"
-            Version="3.0.1"
-            PrivateAssets="all"/>
-        <PackageReference
-            Include="Microsoft.Build.Framework"
-            Version="17.11.4"
-            PrivateAssets="all" />
+        <PackageReference Include="Microsoft.Build.Utilities.Core" Version="18.9.6" PrivateAssets="all" ExcludeAssets="Runtime">
+          <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="HtmlTextWriter" Version="3.0.2" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.Build.Framework" Version="18.9.6" PrivateAssets="all" />
         <PackageReference
             Include="Microsoft.CSharp"
             Version="4.7.0"
             PrivateAssets="all"/>
-        <PackageReference
-            Include="System.Text.Json"
-            Version="8.0.5"
-            PrivateAssets="all"/>
+        <PackageReference Include="System.Text.Json" Version="10.0.11" PrivateAssets="all" />
     </ItemGroup>
 
     <ItemGroup>

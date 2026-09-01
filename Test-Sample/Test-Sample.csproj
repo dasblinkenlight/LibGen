@@ -2,7 +2,7 @@
     <UsingTask TaskName="LibLinkGenerator" AssemblyFile="..\LibGen\bin\Debug\netstandard2.0\Dasblinkenlight.LibGen.dll"/>
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <RootNamespace>Test_Sample</RootNamespace>

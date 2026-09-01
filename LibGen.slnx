@@ -1,5 +1,5 @@
 ﻿<Solution>
-  <Folder Name="Solution Items">
+  <Folder Name="/Solution Items/">
     <File Path="README.md"/>
   </Folder>
   <Project Path="LibGen\LibGen.csproj" Type="Classic C#" />

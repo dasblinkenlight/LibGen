@@ -8,12 +8,12 @@
       "files": [
         {
           "file": "dist/js/bootstrap.bundle.min.js",
-          "component":"_BootstrapCSS",
+          "component":"_BootstrapJS",
           "test-class":"window.bootstrap"
         },
         {
           "file": "dist/css/bootstrap.min.css",
-          "component":"_BootstrapJS",
+          "component":"_BootstrapCSS",
           "test-class":"visually-hidden",
           "test-property":"position",
           "test-value":"absolute"

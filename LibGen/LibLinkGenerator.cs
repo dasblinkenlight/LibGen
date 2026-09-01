@@ -254,7 +254,7 @@ public class LibLinkGenerator : Task {
     }
 
     private void WritePartialView(ScriptLibFile scriptLink, string integrityHash, HtmlTextWriter html) {
-        html.AddAttribute("rel", "stylesheet");
+        html.AddAttribute("type", "text/javascript");
         html.AddAttribute("src", HtmlEncoder.Encode(scriptLink.RemoteUrl));
         html.AddAttribute("asp-fallback-src", GetLocalUrl(scriptLink));
         html.AddAttribute("asp-fallback-test", scriptLink.TestClass);

@@ -8,6 +8,7 @@
         <LibLinkGenerator
             RootFolder="$(MSBuildProjectDirectory)"
             FallbackRoot="$(FallbackRoot)"
+            WebRootFolder="$(WebRootFolder)"
             LibraryDefinitions="$(LibraryDefinitions)"
             LibraryResultFile="$(BaseIntermediateOutputPath)\$(LibraryDefinitions).result">
         </LibLinkGenerator>

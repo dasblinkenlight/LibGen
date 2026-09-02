@@ -65,6 +65,27 @@ public class TestGenTask : IClassFixture<TestContext> {
         }
     }
 
+    [Theory]
+    // Default shape: the web root segment ('wwwroot') is stripped from the front.
+    [InlineData("wwwroot/assets/vendor", null, "assets/vendor")]
+    // No web root segment present at all - FallbackRoot is already web-root-relative, so
+    // nothing should be stripped from it (this used to throw ArgumentOutOfRangeException).
+    [InlineData("vendor", null, "vendor")]
+    // Doesn't start with 'wwwroot' - used to silently strip "assets" instead and produce the
+    // wrong URL ("vendor" rather than "assets/vendor").
+    [InlineData("assets/vendor", null, "assets/vendor")]
+    // A non-default WebRootFolder is honored instead of the hardcoded default.
+    [InlineData("public/assets/vendor", "public", "assets/vendor")]
+    public void TestGetWebRelativeFallbackRoot(string fallbackRoot, string? webRootFolder, string expected) {
+        var gen = new LibLinkGenerator {
+            FallbackRoot = fallbackRoot,
+            WebRootFolder = webRootFolder,
+            RootFolder = Path.Combine(context.TempDir.FullName, "Projects", "GreenwichBotanicalArt"),
+            BuildEngine = new MockBuildEngine()
+        };
+        Assert.Equal(expected, gen.GetWebRelativeFallbackRoot());
+    }
+
     private LibLinkGenerator CreateTestGen() {
         var res = new LibLinkGenerator {
             FallbackRoot = "wwwroot/assets/vendor",

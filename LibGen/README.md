@@ -1,18 +1,18 @@
 # Generator of Partial Razor Views for ASP.NET Core Libraries
 
-This is a MSBuild tool for generating partial Razor views for inclusion in your ASP.NET Core pages.
+This is an MSBuild tool for generating partial Razor views for inclusion in your ASP.NET Core pages.
 
 ## Problem
 
 Referencing client-side libraries backed by Content Distribution Networks (CDN) requires attention to details:
-you need to copy the full path and its matching integrity hash for both the css and js files into the source code
+you need to copy the full path and its matching integrity hash for both the CSS and js files into the source code
 of your Razor page, and copy the relevant files into the local wwwroot folder. You also need to maintain all the
 items to upgrade to the next version of the library.
 
 ## Solution
 
 This simple tool solves the problem by introducing a simple convention: each client-side library
-maps to one or more partial Razor views containing a single script link, which is then included into your Razor view.
+maps to one or more partial Razor views containing a single script link, which is then included in your Razor view.
 
 <details>
   <summary>Sample Partial View</summary>
@@ -105,6 +105,18 @@ maps to one or more partial Razor views containing a single script link, which i
         <RootNamespace>My.Project.Namespace</RootNamespace>
         <!-- This setting lets you specify an override for the default LibDef.json name -->
         <LibraryDefinitionsFile>ClientLibraries.json</LibraryDefinitionsFile>
+        <!-- This is added when you install LibGen -->
+        <Target
+                Name="GenerateClientLibs" BeforeTargets="CoreCompile"
+                Inputs="$(MSBuildProjectDirectory)\$(LibraryDefinitionsFile)"
+                Outputs="$(LibraryResultFile)" >
+            <LibLinkGenerator
+                    RootFolder="$(MSBuildProjectDirectory)"
+                    WebRootFolder="wwwroot"
+                    FallbackRoot="wwwroot/assets/vendor"
+                    LibraryDefinitions="$(LibraryDefinitionsFile)"
+                    LibraryResultFile="$(LibraryResultFile)"/>
+        </Target>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Dasblinkenlight.LibGen" Version="1.1.0" />

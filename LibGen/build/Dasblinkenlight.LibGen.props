@@ -15,6 +15,7 @@
     <PropertyGroup>
         <RootFolder Condition="'$(RootFolder)' == ''">$(MSBuildProjectDirectory)</RootFolder>
         <FallbackRoot Condition="'$(FallbackRoot)' == ''">wwwroot/assets/vendor</FallbackRoot>
+        <WebRootFolder Condition="'$(WebRootFolder)' == ''">wwwroot</WebRootFolder>
         <LibraryDefinitions Condition="'$(LibraryDefinitions)' == ''">LibDef.json</LibraryDefinitions>
     </PropertyGroup>
 </Project>

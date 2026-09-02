@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 using System.Web.UI;
 using Microsoft.Build.Framework;
 using Task = Microsoft.Build.Utilities.Task;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 [assembly: InternalsVisibleTo("Test-LibGen")]
 
@@ -25,6 +27,11 @@ public class LibLinkGenerator : Task {
     [Required]
     public string? FallbackRoot { get; set; }
 
+    // Folder name relative to web-root that FallbackRoot's leading path segment
+    // is stripped against when computing the runtime fallback URL. Defaults to wwwroot.
+    // FallbackRoot that doesn't start with this segment is treated as web-root-relative.
+    public string? WebRootFolder { get; set; }
+
     // Library definitions file
     [Required]
     public string? LibraryDefinitions { get; set; }
@@ -34,6 +41,8 @@ public class LibLinkGenerator : Task {
     public string? LibraryResultFile { get; set; }
 
     private static readonly Assembly Asm = typeof(LibLinkGenerator).Assembly;
+
+    private static readonly HttpClient SharedHttpClient = new();
 
     private static readonly JavaScriptEncoder JavaScriptEncoder = JavaScriptEncoder.Default;
 
@@ -46,9 +55,20 @@ public class LibLinkGenerator : Task {
         Asm.GetManifestResourceStream(GetResourceName(name))!;
 
     private string GetLocalUrl(AbstractLibFile file) {
-        var localHrefBase = FallbackRoot?.Substring(FallbackRoot.IndexOf('/'));
-        var rawHref = $"{localHrefBase}/{file.Lib.Name}/{file.Name}";
+        var rawHref = "/" + string.Join("/",
+            new[] { GetWebRelativeFallbackRoot(), file.Lib.Name, file.Name }
+                .SelectMany(segment => segment.Replace('\\', '/').Split('/'))
+                .Where(segment => segment.Length > 0));
         return JavaScriptEncoder.Encode(HtmlEncoder.Encode(rawHref));
+    }
+
+    internal string GetWebRelativeFallbackRoot() {
+        var webRoot = (WebRootFolder ?? "wwwroot").Replace('\\', '/').Trim('/');
+        var segments = FallbackRoot!.Replace('\\', '/').Split(['/'], StringSplitOptions.RemoveEmptyEntries);
+        if (segments.Length > 0 && string.Equals(segments[0], webRoot, StringComparison.OrdinalIgnoreCase)) {
+            segments = segments.Skip(1).ToArray();
+        }
+        return string.Join("/", segments);
     }
 
     internal string ArtifactPath => Path.Combine(RootFolder!, FallbackRoot!);
@@ -64,7 +84,7 @@ public class LibLinkGenerator : Task {
             return false;
         }
         if (!Directory.Exists(RootFolder)) {
-            Log.LogError("{0:RootPath} does not exist", RootFolder);
+            Log.LogError("{0} does not exist", RootFolder);
             return false;
         }
         if (string.IsNullOrWhiteSpace(LibraryDefinitions)) {
@@ -72,7 +92,7 @@ public class LibLinkGenerator : Task {
             return false;
         }
         if (!File.Exists(LibDefFile)) {
-            Log.LogError("{0:LibDefFile} does not exist", LibDefFile);
+            Log.LogError("{0} does not exist", LibDefFile);
             return false;
         }
         if (string.IsNullOrWhiteSpace(FallbackRoot)) {
@@ -99,7 +119,7 @@ public class LibLinkGenerator : Task {
             foreach (var lib in config.Libraries) {
                 var result = TryProcessLibraryAsync(lib).GetAwaiter().GetResult();
                 if (!result) {
-                    Log.LogError("Unable to process {0:LibName}", lib.Name);
+                    Log.LogError("Unable to process {0}", lib.Name);
                 }
             }
             if (Log.HasLoggedErrors) {
@@ -137,29 +157,36 @@ public class LibLinkGenerator : Task {
                 fileName = file.Name;
             }
             var destinationPath = Path.Combine(pathToFile, fileName);
-            using var stream = File.OpenWrite(destinationPath);
-            if (!await TryCopyContentToStream(file, stream)) {
-                Log.LogError("Unable to copy library content to {0:DestinationPath}", destinationPath);
-                return false;
+            var tempPath = destinationPath + ".download";
+            try {
+                using (var stream = File.Create(tempPath)) {
+                    if (!await TryCopyContentToStream(file, stream)) {
+                        Log.LogError("Unable to copy library content to {0}", destinationPath);
+                        return false;
+                    }
+                }
+                ReplaceFile(tempPath, destinationPath);
+            } finally {
+                if (File.Exists(tempPath)) {
+                    File.Delete(tempPath);
+                }
             }
-            stream.Close();
             var shaRes = TryGetIntegrityHash(pathToFile, fileName, out var sha512);
             if (!shaRes) {
-                Log.LogError("Unable to make integrity hash for {0:DestinationPath}", destinationPath);
+                Log.LogError("Unable to make integrity hash for {0}", destinationPath);
                 return false;
             }
             if (file is not AbstractComponentFile component) {
                 continue;
             }
             var viewName = Path.Combine(ComponentPath, $"{component.ComponentName}.cshtml");
-            File.Delete(viewName);
-            using var htmlStream = File.OpenWrite(viewName);
-            using var htmlWriter = new StreamWriter(htmlStream);
-            using var html = new HtmlTextWriter(htmlWriter);
-            WritePartialViewForLibFile(file, sha512, html);
-            html.Close();
-            htmlWriter.Close();
-            htmlStream.Close();
+            var viewTempName = viewName + ".download";
+            using (var htmlStream = File.Create(viewTempName))
+            using (var htmlWriter = new StreamWriter(htmlStream))
+            using (var html = new HtmlTextWriter(htmlWriter)) {
+                WritePartialViewForLibFile(file, sha512, html);
+            }
+            ReplaceFile(viewTempName, viewName);
         }
         return true;
     }
@@ -177,12 +204,19 @@ public class LibLinkGenerator : Task {
         return true;
     }
 
+    private static void ReplaceFile(string tempPath, string destinationPath) {
+        if (File.Exists(destinationPath)) {
+            File.Replace(tempPath, destinationPath, null);
+        } else {
+            File.Move(tempPath, destinationPath);
+        }
+    }
+
     private async Task<bool> TryCopyContentToStream(AbstractLibFile file, Stream outputStream,
         CancellationToken cancellationToken = default) {
-        using var httpClient = new HttpClient();
-        using var responseMsg = await httpClient.GetAsync(new Uri(file.RemoteUrl), cancellationToken);
+        using var responseMsg = await SharedHttpClient.GetAsync(new Uri(file.RemoteUrl), cancellationToken);
         if (!responseMsg.IsSuccessStatusCode) {
-            Log.LogError("Unable to get '{0:RemoteUrl}': {1:Response}", file.RemoteUrl, responseMsg.ReasonPhrase);
+            Log.LogError("Unable to get '{0}': {1}", file.RemoteUrl, responseMsg.ReasonPhrase);
             return false;
         }
         await responseMsg.Content.CopyToAsync(outputStream);

@@ -19,6 +19,7 @@
         Outputs="$(LibraryResultFile)" >
         <LibLinkGenerator
             RootFolder="$(MSBuildProjectDirectory)"
+            WebRootFolder="wwwroot"
             FallbackRoot="wwwroot/assets/vendor"
             LibraryDefinitions="$(LibraryDefinitionsFile)"
             LibraryResultFile="$(LibraryResultFile)"/>

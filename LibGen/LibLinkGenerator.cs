@@ -146,7 +146,9 @@ public class LibLinkGenerator : Task {
         foreach (var file in lib.Files) {
             string pathToFile;
             string fileName;
-            var separatorIndex = file.Name.LastIndexOf(Path.DirectorySeparatorChar);
+            var separatorIndex = Math.Max(
+                file.Name.LastIndexOf(Path.DirectorySeparatorChar),
+                file.Name.LastIndexOf(Path.AltDirectorySeparatorChar));
             if (separatorIndex != -1) {
                 var extraPath = file.Name.Substring(0, separatorIndex);
                 pathToFile = Path.Combine(libBasePath, extraPath);

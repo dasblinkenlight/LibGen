@@ -1,0 +1,30 @@
+{
+  "version": "1.0",
+  "libraries": [
+    {
+      "library": "imagesloaded",
+      "version": "5.0.0",
+      "provider": "jsdelivr",
+      "preserve-version": true,
+      "files": [
+        {
+          "file": "imagesloaded.pkgd.min.js",
+          "component":"_ImagesLoadedVersioned",
+          "test-class": "imagesLoaded"
+        }
+      ]
+    },
+    {
+      "library": "imagesloaded",
+      "version": "5.0.0",
+      "provider": "jsdelivr",
+      "files": [
+        {
+          "file": "imagesloaded.pkgd.min.js",
+          "component":"_ImagesLoadedUnversioned",
+          "test-class": "imagesLoaded"
+        }
+      ]
+    }
+  ]
+}

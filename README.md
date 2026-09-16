@@ -58,6 +58,7 @@ maps to one or more partial Razor views containing a single script link, which i
       "library": "bootstrap",
       "version": "5.3.3",
       "provider": "cdnjs",
+      "preserve-version": true,
       "files": [
         {
           "file": "js/bootstrap.bundle.min.js",
@@ -94,6 +95,9 @@ maps to one or more partial Razor views containing a single script link, which i
   }
 ```
 </details>
+
+By default, downloaded fallback artifacts are stored in `assets/vendor/<library-name>/`.
+Set `"preserve-version": true` on a library entry to preserve the version in the fallback path.
 
 <details>
   <summary>Sample Project File</summary>

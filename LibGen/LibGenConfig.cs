@@ -45,6 +45,14 @@ internal class LibGenConfig {
                 libFiles.ValueKind != JsonValueKind.Array) {
                 throw new InvalidOperationException("Incorrect element: files");
             }
+            var preserveVersion = false;
+            if (libElem.TryGetProperty("preserve-version", out var preserveVersionElem)) {
+                if (preserveVersionElem.ValueKind != JsonValueKind.True &&
+                    preserveVersionElem.ValueKind != JsonValueKind.False) {
+                    throw new InvalidOperationException("Incorrect element: preserve-version");
+                }
+                preserveVersion = preserveVersionElem.GetBoolean();
+            }
             var files = new List<AbstractLibFile>();
             foreach (var fileElem in libFiles.EnumerateArray()) {
                 if (fileElem.ValueKind == JsonValueKind.Object) {
@@ -85,7 +93,8 @@ internal class LibGenConfig {
                 libName.GetString()!,
                 libVer.GetString()!,
                 libProvider.GetString()!,
-                files));
+                files,
+                preserveVersion));
         }
         return new LibGenConfig(libs);
     }

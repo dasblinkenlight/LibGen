@@ -55,8 +55,11 @@ public class LibLinkGenerator : Task {
         Asm.GetManifestResourceStream(GetResourceName(name))!;
 
     private string GetLocalUrl(AbstractLibFile file) {
+        var pathSegments = file.Lib.PreserveVersion
+            ? new[] { GetWebRelativeFallbackRoot(), file.Lib.Name, file.Lib.Version, file.Name }
+            : new[] { GetWebRelativeFallbackRoot(), file.Lib.Name, file.Name };
         var rawHref = "/" + string.Join("/",
-            new[] { GetWebRelativeFallbackRoot(), file.Lib.Name, file.Name }
+            pathSegments
                 .SelectMany(segment => segment.Replace('\\', '/').Split('/'))
                 .Where(segment => segment.Length > 0));
         return JavaScriptEncoder.Encode(HtmlEncoder.Encode(rawHref));
@@ -141,7 +144,9 @@ public class LibLinkGenerator : Task {
     }
 
     internal async Task<bool> TryProcessLibraryAsync(LibLinkConfig lib) {
-        var libBasePath = Path.Combine(ArtifactPath, lib.Name);
+        var libBasePath = lib.PreserveVersion
+            ? Path.Combine(ArtifactPath, lib.Name, lib.Version)
+            : Path.Combine(ArtifactPath, lib.Name);
         Directory.CreateDirectory(libBasePath);
         foreach (var file in lib.Files) {
             string pathToFile;

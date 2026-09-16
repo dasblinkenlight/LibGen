@@ -36,6 +36,8 @@
     <ItemGroup>
       <None Remove="TestConfig\Test-Bootstrap.json" />
       <EmbeddedResource Include="TestConfig\Test-Bootstrap.json" />
+      <None Remove="TestConfig\Test-PreserveVersion.json" />
+      <EmbeddedResource Include="TestConfig\Test-PreserveVersion.json" />
     </ItemGroup>
 
 </Project>

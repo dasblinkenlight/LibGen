@@ -5,6 +5,7 @@
       "library": "bootstrap",
       "version": "5.3.6",
       "provider": "jsdelivr",
+      "preserve-version": true,
       "files": [
         {
           "file": "dist/js/bootstrap.bundle.min.js",

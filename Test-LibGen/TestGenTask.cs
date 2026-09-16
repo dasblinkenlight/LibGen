@@ -33,10 +33,19 @@ public class TestGenTask : IClassFixture<TestContext> {
         Assert.Equal("bootstrap", lib1.Name);
         Assert.Equal("5.3.3", lib1.Version);
         Assert.Equal("cdnjs", lib1.Provider);
+        Assert.False(lib1.PreserveVersion);
         var lib1files = lib1.Files;
         Assert.Equal(2, lib1files.Count);
         Assert.IsType<ScriptLibFile>(lib1files[0]);
         Assert.IsType<StyleLibFile>(lib1files[1]);
+    }
+
+    [Fact]
+    public void TestReadConfigPreserveVersion() {
+        var config = LibGenConfig.Parse(GetResourceStream("Test-PreserveVersion.json"));
+        Assert.Equal(2, config.Libraries.Count);
+        Assert.True(config.Libraries[0].PreserveVersion);
+        Assert.False(config.Libraries[1].PreserveVersion);
     }
 
     [Fact]
@@ -53,6 +62,30 @@ public class TestGenTask : IClassFixture<TestContext> {
     }
 
     [Fact]
+    public async Task TestCopyContentToStreamPreserveVersion() {
+        var gen = CreateTestGen();
+        var config = LibGenConfig.Parse(GetResourceStream("Test-PreserveVersion.json"));
+        Directory.CreateDirectory(gen.ArtifactPath);
+        Directory.CreateDirectory(gen.ComponentPath);
+
+        var versionedLib = config.Libraries.Single(lib => lib.PreserveVersion);
+        var unversionedLib = config.Libraries.Single(lib => !lib.PreserveVersion);
+
+        Assert.True(await gen.TryProcessLibraryAsync(versionedLib),
+            $"Cannot process library {versionedLib.Name}");
+        Assert.True(await gen.TryProcessLibraryAsync(unversionedLib),
+            $"Cannot process library {unversionedLib.Name}");
+
+        var versionedPath = Path.Combine(
+            gen.ArtifactPath, versionedLib.Name, versionedLib.Version, "imagesloaded.pkgd.min.js");
+        var unversionedPath = Path.Combine(
+            gen.ArtifactPath, unversionedLib.Name, "imagesloaded.pkgd.min.js");
+
+        Assert.True(File.Exists(versionedPath), $"Expected artifact at {versionedPath}");
+        Assert.True(File.Exists(unversionedPath), $"Expected artifact at {unversionedPath}");
+    }
+
+    [Fact]
     public void TestWritePartial() {
         using var textWriter = new StringWriter();
         using var html = new HtmlTextWriter(textWriter);
@@ -63,6 +96,27 @@ public class TestGenTask : IClassFixture<TestContext> {
                 gen.WritePartialViewForLibFile(file, "test-integrity", html);
             }
         }
+    }
+
+    [Fact]
+    public void TestWritePartialPreserveVersion() {
+        var gen = CreateTestGen();
+        var config = LibGenConfig.Parse(GetResourceStream("Test-PreserveVersion.json"));
+
+        var versionedLib = config.Libraries.Single(lib => lib.PreserveVersion);
+        var versionedOutput = RenderPartialView(gen, versionedLib.Files[0]);
+        Assert.Contains($"/assets/vendor/{versionedLib.Name}/{versionedLib.Version}/", versionedOutput);
+
+        var unversionedLib = config.Libraries.Single(lib => !lib.PreserveVersion);
+        var unversionedOutput = RenderPartialView(gen, unversionedLib.Files[0]);
+        Assert.DoesNotContain($"/assets/vendor/{unversionedLib.Name}/{unversionedLib.Version}/", unversionedOutput);
+    }
+
+    private static string RenderPartialView(LibLinkGenerator gen, AbstractLibFile file) {
+        using var textWriter = new StringWriter();
+        using var html = new HtmlTextWriter(textWriter);
+        gen.WritePartialViewForLibFile(file, "test-integrity", html);
+        return textWriter.ToString();
     }
 
     [Theory]
